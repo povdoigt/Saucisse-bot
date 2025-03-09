@@ -1,5 +1,6 @@
 from random import choice,randint
 from get_scop import get_HSCP_tr,get_HSCP_fr
+import time 
 signes = [
     "Bélier",  
     "Taureau",  
@@ -66,6 +67,9 @@ De rien, bonne journée"""
         return '# FEUR'
     elif 'qui' in lowered[-5:] or lowered[:3] == 'qui':
         return '# Pratick Kanner'
+    elif lowered == '!!time':
+        local_time = time.ctime(time.time())
+        return local_time
     else:
         return ''
     """else :
