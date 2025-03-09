@@ -116,7 +116,7 @@ async def in_channel(message, command):
     elif command[:8] == '!!remove':
         try:
             index = int(command[8:])
-
+            name = str(queue[index-1])
             if index == n+1:
                 await del_cur_song(message, index)
             elif index > n+1:
@@ -131,6 +131,7 @@ async def in_channel(message, command):
                 if index < n+1:
                     queue.pop(index-1)
                     n -= 1
+            message.channel.send(f'***{name}*** removed!!')
         except Exception as e:
             print(e)
     elif command[:7] == '!!remtr':
