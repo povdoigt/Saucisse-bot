@@ -18,6 +18,15 @@ vc = 0
 voice_channel = ''
 play_status = 'off'
 
+async def reset():
+    global queue,n,vc,voice_channel,play_status
+    queue = []
+    n = 0
+    vc = 0
+    voice_channel = ''
+    play_status = 'off'
+
+
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
 code_path = os.getenv('CODE_PATH')
@@ -308,6 +317,8 @@ async def on_message(message):
             await in_channel(message, user_message)
             await print_queue(message, user_message)
             await play_salom(message, user_message)
+    if user_message == '!!reset':
+        await reset()
 
 
 # step 5 main entry point
