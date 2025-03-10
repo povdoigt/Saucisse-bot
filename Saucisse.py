@@ -116,7 +116,6 @@ async def in_channel(message, command):
         await message.channel.send(play_status)  
     elif command[:8] == f'{pre}remove':
         try:
-
             index = int(command[8:])
             name = str(queue[index-1].name)
             if index == n+1:
