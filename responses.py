@@ -46,14 +46,14 @@ voici un petit aperçu de mes capacitées:
     * hscope_fr #signe# vous donne l'horoscope du signe en français 
 * je peux egalement jouer de la musique
     * pour a jouter des musiques :
-        * !!play puis le titre de la musique ajoute le 1er resultat youtube à la queue
-        * !!link puis un lien de video ajoute la video à la queue
-        * !!plst puis un lien de playlist youtube ajoute toutes les musique de la playlist 
-    *  pour gerer les musiques : 
-        * !!queue vous montre la queue des musiques 
-        * !!skip premet de passer une musique 
-        * !!remove n permet d'enlever la n ieme musique de la queue 
-        * !!loop joue les muisuqes de la queue en boucle 
+    * !!play puis le titre de la musique ajoute le 1er resultat youtube à la queue
+    * !!link puis un lien de video ajoute la video à la queue
+    * !!plst puis un lien de playlist youtube ajoute toutes les musique de la playlist 
+*  pour gerer les musiques : 
+    * !!queue vous montre la queue des musiques 
+    * !!skip premet de passer une musique 
+    * !!remove n permet d'enlever la n ieme musique de la queue 
+    * !!loop joue les muisuqes de la queue en boucle 
 De rien, bonne journée"""
     elif 'horoscope' in lowered:
         print(lowered)
