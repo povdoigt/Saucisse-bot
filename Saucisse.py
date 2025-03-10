@@ -217,7 +217,7 @@ async def ajouter_queue(ctx, user_message):
                 print(j)
                 path = get_video_with_link(j)
                 print(path)
-                queue.append(Track(path[37:-4], path, user_message,ctx.author))
+                queue.append(Track(path[37:-4], path,j,ctx.author))
                 await ctx.channel.send(f' **{queue[-1].name}** ajouté a la queufe!!')
             voice_channel = ctx.author.voice.channel
             return voice_channel
