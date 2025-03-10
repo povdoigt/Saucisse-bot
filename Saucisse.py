@@ -17,6 +17,7 @@ n = 0
 vc = 0
 voice_channel = ''
 play_status = 'off'
+pre = '!!'
 
 async def reset():
     global queue,n,vc,voice_channel,play_status
@@ -88,7 +89,7 @@ async def del_cur_song(message, index):
 
 async def in_channel(message, command):
     global queue, n, vc, play_status
-    if command == "!!skip":
+    if command == f"{pre}skip":
         await skip(message)
     elif queue != [] and play_status == 'off':
         play_status = 'on'
@@ -99,21 +100,21 @@ async def in_channel(message, command):
         queue = []
         await vc.disconnect()
         play_status = 'off'
-    elif command == '!!n':
+    elif command == f'{pre}n':
         await message.channel.send(n)
-    elif command == '!!quit':
+    elif command == f'{pre}quit':
         await quit_queue()
-    elif command == '!!clear':
+    elif command == f'{pre}clear':
         clear_queue()
-    elif command == '!!off':
+    elif command == f'{pre}off':
         play_status = 'off'
-    elif command == '!!loop':
+    elif command == f'{pre}loop':
         play_status = 'loop'
         for i in range(n):
             download_video(queue[i].link)  # a verifier
-    elif command == '!!state':
+    elif command == f'{pre}state':
         await message.channel.send(play_status)  
-    elif command[:8] == '!!remove':
+    elif command[:8] == f'{pre}remove':
         try:
 
             index = int(command[8:])
@@ -136,7 +137,7 @@ async def in_channel(message, command):
     
         except Exception as e:
             print(e)
-    elif command[:7] == '!!remtr':
+    elif command[:7] == f'{pre}remtr':
         print('remtr')
         user = command [8:]
         print(user)
@@ -185,7 +186,7 @@ async def connect_to_a_channel(channel):
 async def ajouter_queue(ctx, user_message):
     voice_channel = ctx.author.voice.channel
     if voice_channel != None:
-        if user_message[:6] == '!!play':
+        if user_message[:6] == f'{pre}play':
             user_message = user_message[7:]
             for i, j in enumerate(user_message):
                 if j == ' ':
@@ -196,17 +197,17 @@ async def ajouter_queue(ctx, user_message):
             print(queue[-1].path)
             print('type : ' + str(type(queue[-1].path)))
             print(queue[-1].link)
-            await ctx.channel.send(f' **{queue[-1].name}** ajouté a la queue!!')
+            await ctx.channel.send(f' **{queue[-1].name}** ajouté a la queufe!!')
             voice_channel = ctx.author.voice.channel
             return voice_channel
-        elif user_message[:6] == '!!link':
+        elif user_message[:6] == f'{pre}link':
             user_message = user_message[7:]
             path = get_video_with_link(user_message)
             queue.append(Track(path[37:-4], path, user_message,ctx.author))
-            await ctx.channel.send(f' **{queue[-1].name}** ajouté a la queue!!')
+            await ctx.channel.send(f' **{queue[-1].name}** ajouté a la queufe!!')
             voice_channel = ctx.author.voice.channel
             return voice_channel
-        elif user_message[:6] == '!!plst':
+        elif user_message[:6] == f'{pre}plst':
             link = user_message[7:]
             print(f'link : {link}')
             urls = get_url_playlist(link)
@@ -217,7 +218,7 @@ async def ajouter_queue(ctx, user_message):
                 path = get_video_with_link(j)
                 print(path)
                 queue.append(Track(path[37:-4], path, user_message,ctx.author))
-                await ctx.channel.send(f' **{queue[-1].name}** ajouté a la queue!!')
+                await ctx.channel.send(f' **{queue[-1].name}** ajouté a la queufe!!')
             voice_channel = ctx.author.voice.channel
             return voice_channel
     else:
@@ -230,7 +231,7 @@ async def ajouter_queue(ctx, user_message):
 
 async def play_salom(message, user_message):
     global play_status
-    if user_message[:7] == '!!salom':
+    if user_message[:7] == f'{pre}salom':
         if play_status == 'on':
             quit_queue()
         play_status = 'on'
@@ -272,7 +273,7 @@ async def jouer_queue(vc):
 
 
 async def print_queue(message, user_message):
-    if user_message == '!!queue':
+    if user_message == f'{pre}queue':
         if queue == []:
             str = '# **Queue vide**'
         else:
@@ -320,7 +321,7 @@ async def on_message(message):
             await in_channel(message, user_message)
             await print_queue(message, user_message)
             await play_salom(message, user_message)
-    if user_message == '!!reset':
+    if user_message == f'{pre}reset':
         await reset()
 
 
