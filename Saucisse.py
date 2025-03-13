@@ -168,13 +168,26 @@ def clear_queue():
 
 
 async def connect_to_a_channel(channel):
-    global queue
+    global queue,vc
     vc = await channel.connect()
     await jouer_queue(vc)
     queue = []
     n = 0
     await vc.disconnect()
 
+async def pause_music(ctx, user_message):
+    global play_status
+    if user_message == '!!pause':
+        vc.pause()
+        play_status = 'pause'
+        await ctx.channel.send(f'{queue[n].name} stoped')
+
+async def resum_music(ctx,user_message):
+    global play_status
+    if user_message == '!!resume':
+        vc.resume()
+        play_status = 'on'
+        await ctx.channel.send(f'{queue[n].name} resumed')
 
 async def ajouter_queue(ctx, user_message):
     try:
@@ -240,10 +253,10 @@ async def jouer_queue(vc):
     if len(queue) > n:
         vc.play(discord.FFmpegPCMAudio(
             executable='C:/Users/Malo/Desktop/ffmpeg-n7.0-latest-win64-lgpl-7.0/bin/ffmpeg.exe', source=queue[n].path))
-    while vc.is_playing():
+    while vc.is_playing() or vc.is_paused():
         await asyncio.sleep(1)
     if play_status != 'loop':
-        if len(queue) > n:
+        if len(queue) > n :
             os.remove(queue[n].path)
     if play_status != 'off':
         n += 1
@@ -300,6 +313,8 @@ async def on_message(message):
             await in_channel(message, user_message)
             await print_queue(message, user_message)
             await play_salom(message, user_message)
+            await pause_music(message, user_message)
+            await resum_music(message,user_message)
     if user_message == f'{pre}reset':
         await reset()
 
