@@ -178,37 +178,35 @@ async def connect_to_a_channel(channel):
 
 async def ajouter_queue(ctx, user_message):
     try:
-        voice_channel = ctx.author.voice.channel
-        if voice_channel != None:
-            if user_message[:6] == f'{pre}play':
-                user_message = user_message[7:]
-                for i, j in enumerate(user_message):
-                    if j == ' ':
-                        user_message = user_message[:i] + '+' + user_message[i+1:]
-                path, link = get_video(user_message)
-                queue.append(Track(path[37:-4], path, link,ctx.author))
-                await ctx.channel.send(f' **{queue[-1].name}** ajouté a la queufe!!')
-                voice_channel = ctx.author.voice.channel
-                return voice_channel
-            elif user_message[:6] == f'{pre}link':
-                user_message = user_message[7:]
-                path = get_video_with_link(user_message)
-                queue.append(Track(path[37:-4], path, user_message,ctx.author))
-                await ctx.channel.send(f' **{queue[-1].name}** ajouté a la queufe!!')
-                voice_channel = ctx.author.voice.channel
-                return voice_channel
-            elif user_message[:6] == f'{pre}plst':
-                link = user_message[7:]
-                urls = get_url_playlist(link)
-                for i,j in enumerate(urls):
-                    path = get_video_with_link(j)
-                    queue.append(Track(path[37:-4], path,j,ctx.author))
+        if user_message[:2] == pre:
+            voice_channel = ctx.author.voice.channel
+            if voice_channel != None:
+                if user_message[:6] == f'{pre}play':
+                    user_message = user_message[7:]
+                    for i, j in enumerate(user_message):
+                        if j == ' ':
+                            user_message = user_message[:i] + '+' + user_message[i+1:]
+                    path, link = get_video(user_message)
+                    queue.append(Track(path[37:-4], path, link,ctx.author))
                     await ctx.channel.send(f' **{queue[-1].name}** ajouté a la queufe!!')
-                voice_channel = ctx.author.voice.channel
-                return voice_channel
-        else:
-            await ctx.channel.send('c\'est non')
-            return False
+                    voice_channel = ctx.author.voice.channel
+                    return voice_channel
+                elif user_message[:6] == f'{pre}link':
+                    user_message = user_message[7:]
+                    path = get_video_with_link(user_message)
+                    queue.append(Track(path[37:-4], path, user_message,ctx.author))
+                    await ctx.channel.send(f' **{queue[-1].name}** ajouté a la queufe!!')
+                    voice_channel = ctx.author.voice.channel
+                    return voice_channel
+                elif user_message[:6] == f'{pre}plst':
+                    link = user_message[7:]
+                    urls = get_url_playlist(link)
+                    for i,j in enumerate(urls):
+                        path = get_video_with_link(j)
+                        queue.append(Track(path[37:-4], path,j,ctx.author))
+                        await ctx.channel.send(f' **{queue[-1].name}** ajouté a la queufe!!')
+                    voice_channel = ctx.author.voice.channel
+                    return voice_channel
     except Exception as e:
         await ctx.channel.send('c\'est non')
         return False
