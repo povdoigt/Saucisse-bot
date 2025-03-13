@@ -58,13 +58,9 @@ async def send_message(message, user_message):
 
 async def skip(message):
     global n, queue, play_status, vc
-    print(f'nskip1{n}')
     voice_channel = message.author.voice.channel
-    print(f'nskip2{n}')
     await vc.disconnect()
-    print(f'nskip3{n}')
     vc = await voice_channel.connect()
-    print(f'nskip4{n}')
     await jouer_queue(vc)
     n = 0
     queue = []
@@ -137,9 +133,7 @@ async def in_channel(message, command):
         except Exception as e:
             print(e)
     elif command[:7] == f'{pre}remtr':
-        print('remtr')
         user = command [8:]
-        print(user)
         m = n+1
         while m<len(queue):
             print('user track : ' + user)
@@ -183,51 +177,43 @@ async def connect_to_a_channel(channel):
 
 
 async def ajouter_queue(ctx, user_message):
-    voice_channel = ctx.author.voice.channel
-    if voice_channel != None:
-        if user_message[:6] == f'{pre}play':
-            user_message = user_message[7:]
-            for i, j in enumerate(user_message):
-                if j == ' ':
-                    user_message = user_message[:i] + '+' + user_message[i+1:]
-            path, link = get_video(user_message)
-            queue.append(Track(path[37:-4], path, link,ctx.author))
-            print(queue[-1].name)
-            print(queue[-1].path)
-            print('type : ' + str(type(queue[-1].path)))
-            print(queue[-1].link)
-            await ctx.channel.send(f' **{queue[-1].name}** ajouté a la queufe!!')
-            voice_channel = ctx.author.voice.channel
-            return voice_channel
-        elif user_message[:6] == f'{pre}link':
-            user_message = user_message[7:]
-            path = get_video_with_link(user_message)
-            queue.append(Track(path[37:-4], path, user_message,ctx.author))
-            await ctx.channel.send(f' **{queue[-1].name}** ajouté a la queufe!!')
-            voice_channel = ctx.author.voice.channel
-            return voice_channel
-        elif user_message[:6] == f'{pre}plst':
-            link = user_message[7:]
-            print(f'link : {link}')
-            urls = get_url_playlist(link)
-            for i,j in enumerate (urls):
-                print(str(i)+' '+j)
-            for i,j in enumerate(urls):
-                print(j)
-                path = get_video_with_link(j)
-                print(path)
-                queue.append(Track(path[37:-4], path,j,ctx.author))
+    try:
+        voice_channel = ctx.author.voice.channel
+        if voice_channel != None:
+            if user_message[:6] == f'{pre}play':
+                user_message = user_message[7:]
+                for i, j in enumerate(user_message):
+                    if j == ' ':
+                        user_message = user_message[:i] + '+' + user_message[i+1:]
+                path, link = get_video(user_message)
+                queue.append(Track(path[37:-4], path, link,ctx.author))
                 await ctx.channel.send(f' **{queue[-1].name}** ajouté a la queufe!!')
-            voice_channel = ctx.author.voice.channel
-            return voice_channel
-    else:
+                voice_channel = ctx.author.voice.channel
+                return voice_channel
+            elif user_message[:6] == f'{pre}link':
+                user_message = user_message[7:]
+                path = get_video_with_link(user_message)
+                queue.append(Track(path[37:-4], path, user_message,ctx.author))
+                await ctx.channel.send(f' **{queue[-1].name}** ajouté a la queufe!!')
+                voice_channel = ctx.author.voice.channel
+                return voice_channel
+            elif user_message[:6] == f'{pre}plst':
+                link = user_message[7:]
+                urls = get_url_playlist(link)
+                for i,j in enumerate(urls):
+                    path = get_video_with_link(j)
+                    queue.append(Track(path[37:-4], path,j,ctx.author))
+                    await ctx.channel.send(f' **{queue[-1].name}** ajouté a la queufe!!')
+                voice_channel = ctx.author.voice.channel
+                return voice_channel
+        else:
+            await ctx.channel.send('c\'est non')
+            return False
+    except Exception as e:
         await ctx.channel.send('c\'est non')
         return False
         
-
-
-
-
+        
 async def play_salom(message, user_message):
     global play_status
     if user_message[:7] == f'{pre}salom':
@@ -249,25 +235,21 @@ async def play_salom(message, user_message):
 
 async def jouer_queue(vc):
     global n
-    print("ok on joue la queue")
-    print(f'nqueue1{n}')   
-    print(len(queue))
     if len(queue) <= n and play_status == 'on':
-        print("exit")
         return
     elif len(queue) <= n and play_status == 'loop':
         n = 0
-    print(queue[n].path)
-    print(f'nqueue2{n}')
-    vc.play(discord.FFmpegPCMAudio(
-        executable='C:/Users/Malo/Desktop/ffmpeg-n7.0-latest-win64-lgpl-7.0/bin/ffmpeg.exe', source=queue[n].path))
+    if len(queue) > n:
+        vc.play(discord.FFmpegPCMAudio(
+            executable='C:/Users/Malo/Desktop/ffmpeg-n7.0-latest-win64-lgpl-7.0/bin/ffmpeg.exe', source=queue[n].path))
     while vc.is_playing():
         await asyncio.sleep(1)
     if play_status != 'loop':
-        os.remove(queue[n].path)
+        if len(queue) > n:
+            os.remove(queue[n].path)
     if play_status != 'off':
         n += 1
-    await jouer_queue(vc)
+        await jouer_queue(vc)
 
 
 

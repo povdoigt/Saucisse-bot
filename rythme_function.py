@@ -42,7 +42,6 @@ def get_url_playlist(url):
     lsit3 = list(list2)
     lsit3.sort()
     lsit3.reverse()
-    print(lsit3)
 
     for i,j in enumerate(lsit3):
         urls.pop(j)
@@ -51,22 +50,13 @@ def get_url_playlist(url):
 
 
 def download_video(url):
-    # url input from user
     yt = YouTube(str(url))
 
-    # extract only audio
     video = yt.streams.filter(only_audio=True).first()
 
-    # check for destination to save file
-
-    # download the file
     out_file = video.download(
         output_path='C:/Users/Malo/Documents/bot_Saucisse/')
-
-    # save the file
-
-    print(out_file)
-    # result of success
+    
     print(yt.title + " has been successfully downloaded.")
     return out_file
 
