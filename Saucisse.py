@@ -56,16 +56,9 @@ async def send_message(message, user_message):
         print(e)
 
 
-async def skip(message):
-    global n, queue, play_status, vc
-    voice_channel = message.author.voice.channel
-    await vc.disconnect()
-    vc = await voice_channel.connect()
-    await jouer_queue(vc)
-    n = 0
-    queue = []
-    play_status = 'off'
-    await vc.disconnect()
+async def skip():
+    global vc
+    vc.stop()
 
 
 async def del_cur_song(message, index):
