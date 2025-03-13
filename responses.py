@@ -39,7 +39,7 @@ def get_response(user_input):
         return"""Bonjours je suis le bot ***Saucisse***
 voici un petit aperçu de mes capacitées:
 * je peux repondre en publique ou en privée, pour que je reponde en privée, commencez votre requete par '///'
-* je vous insulte sui vous utilisez la locution suivant: \"??\"
+* je vous insulte si vous utilisez la locution suivant: \"??\"
 * je peux aussi envoyer une image de saucisse si vous utilisez le mot saucisse
 * je peux aussi vous donner l'horoscope du jour  
     * horoscope #signe# vous donne l'oroscope du signe dans une langue aléatoire
@@ -54,6 +54,8 @@ voici un petit aperçu de mes capacitées:
     * !!skip premet de passer une musique 
     * !!remove n permet d'enlever la n ieme musique de la queue 
     * !!loop joue les muisuqes de la queue en boucle 
+    * !!pause permet de mettre la musique en pause 
+    * !!resume permet de reprendre la musique en cours 
 De rien, bonne journée"""
     elif 'horoscope' in lowered:
         print(lowered)
