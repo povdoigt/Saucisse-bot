@@ -44,7 +44,7 @@ async def send_message(message, user_message):
     if not user_message:
         print('message was empty becaus intents were not enabled probably')
         return
-    if is_private := (user_message[:3] == '///' or user_message == 'help'):
+    if is_private := (user_message[:3] == '///' or user_message == 'saucisse help'):
         if user_message[:3] == '///':
             user_message = user_message[3:]
     try:
@@ -59,7 +59,6 @@ async def send_message(message, user_message):
 async def skip():
     global vc
     vc.stop()
-
 
 async def del_cur_song(message, index):
     global n, queue, play_status, vc

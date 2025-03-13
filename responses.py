@@ -35,7 +35,7 @@ def get_response(user_input):
         return 'Well you\'re awfully scilent...'
     elif lowered == '??':
         return 'nique ta race'
-    elif lowered == 'help':
+    elif lowered == 'saucisse help':
         return"""Bonjours je suis le bot ***Saucisse***
 voici un petit aperçu de mes capacitées:
 * je peux repondre en publique ou en privée, pour que je reponde en privée, commencez votre requete par '///'
