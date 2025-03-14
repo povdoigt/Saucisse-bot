@@ -78,7 +78,7 @@ async def del_cur_song(message, index):
 async def in_channel(message, command):
     global queue, n, vc, play_status
     if command == f"{pre}skip":
-        await skip(message)
+        await skip()
     elif queue != [] and play_status == 'off':
         play_status = 'on'
         voice_channel = message.author.voice.channel
