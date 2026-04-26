@@ -3,7 +3,7 @@ from typing import Final
 import discord
 from dotenv import load_dotenv
 from responses import get_response
-from rythme_function import get_video, get_video_with_link, download_video, get_url_playlist
+from rythme_function import get_video, get_video_with_link, download_video, get_url_playlist, transtime
 import asyncio
 from tracks import Track
 
@@ -191,25 +191,25 @@ async def ajouter_queue(ctx, user_message):
                     for i, j in enumerate(user_message):
                         if j == ' ':
                             user_message = user_message[:i] + '+' + user_message[i+1:]
-                    path, link = get_video(user_message)
-                    queue.append(Track(path[37:-4], path, link,ctx.author))
-                    await ctx.channel.send(f' **{queue[-1].name}** ajouté a la queufe!!')
+                    path, link,obj = get_video(user_message)
+                    queue.append(Track(path[12:-4], path, link,ctx.author,obj))
+                    await ctx.channel.send(f' **{queue[-1].name}** ajouté a la queue!!')
                     voice_channel = ctx.author.voice.channel
                     return voice_channel
                 elif user_message[:6] == f'{pre}link':
                     user_message = user_message[7:]
-                    path = get_video_with_link(user_message)
-                    queue.append(Track(path[37:-4], path, user_message,ctx.author))
-                    await ctx.channel.send(f' **{queue[-1].name}** ajouté a la queufe!!')
+                    path,obj = get_video_with_link(user_message)
+                    queue.append(Track(path[12:-4], path, user_message,ctx.author,obj))
+                    await ctx.channel.send(f' **{queue[-1].name}** ajouté a la queue!!')
                     voice_channel = ctx.author.voice.channel
                     return voice_channel
                 elif user_message[:6] == f'{pre}plst':
                     link = user_message[7:]
                     urls = get_url_playlist(link)
                     for i,j in enumerate(urls):
-                        path = get_video_with_link(j)
-                        queue.append(Track(path[37:-4], path,j,ctx.author))
-                        await ctx.channel.send(f' **{queue[-1].name}** ajouté a la queufe!!')
+                        path,obj = get_video_with_link(j)
+                        queue.append(Track(path[12:-4], path,j,ctx.author,obj))
+                        await ctx.channel.send(f' **{queue[-1].name}** ajouté a la queue!!')
                     voice_channel = ctx.author.voice.channel
                     return voice_channel
     except Exception as e:
@@ -225,10 +225,10 @@ async def play_salom(message, user_message):
         play_status = 'on'
         voice_channel = message.author.voice.channel
         vc = await voice_channel.connect()
-        audio = get_video_with_link(
+        audio= get_video_with_link(
             'https://www.youtube.com/watch?v=4Fge4EPiKA0')
         vc.play(discord.FFmpegPCMAudio(
-            executable='C:/Users/Malo/Desktop/ffmpeg-n7.0-latest-win64-lgpl-7.0/bin/ffmpeg.exe', source=audio))
+            executable=ffmpeg_path, source=audio))
         while vc.is_playing():
             await asyncio.sleep(1)
         os.remove(audio)
@@ -244,7 +244,7 @@ async def jouer_queue(vc):
         n = 0
     if len(queue) > n:
         vc.play(discord.FFmpegPCMAudio(
-            executable='C:/Users/Malo/Desktop/ffmpeg-n7.0-latest-win64-lgpl-7.0/bin/ffmpeg.exe', source=queue[n].path))
+            executable=ffmpeg_path, source=queue[n].path))
     while vc.is_playing() or vc.is_paused():
         await asyncio.sleep(1)
     if play_status != 'loop':
@@ -264,9 +264,9 @@ async def print_queue(message, user_message):
             str = '# **queue : **\n'
             for i, j in enumerate(queue):
                 if i == n:
-                    str += f"""* ***{i+1} ---> {j.user} : {j.name}***\n"""
+                    str += f"""* ***{i+1} ---> {j.user} : [{transtime(j.obj.length)}] {j.name}***\n"""
                 else:
-                    str += f"""* {i+1} ---> {j.user} : {j.name}\n"""
+                    str += f"""* {i+1} ---> {j.user} : [{transtime(j.obj.length)}] {j.name}\n"""
         await message.channel.send(str)
 
 # reactiuon functionality
@@ -318,7 +318,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-print('test')
-

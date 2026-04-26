@@ -2,8 +2,11 @@ import urllib.request
 import re
 from pytubefix import YouTube
 import os
+from dotenv import load_dotenv
 
-code_path = 'C:/Users/Malo/Documents/bot_Saucisse/ '
+
+load_dotenv()
+code_path = os.getenv('CODE_PATH')
 
 
 def get_url(search_query):
@@ -55,19 +58,32 @@ def download_video(url):
     video = yt.streams.filter(only_audio=True).first()
 
     out_file = video.download(
-        output_path='C:/Users/Malo/Documents/bot_Saucisse/')
+        output_path='C:/saucisse')
     
     print(yt.title + " has been successfully downloaded.")
-    return out_file
+    obj = yt
+    return out_file,obj
 
 
 def get_video(search):
     url = get_url(search)
-    title = download_video(url)
-    return title, url
+    title,obj = download_video(url)
+    return title, url, obj
 
 
 def get_video_with_link(link):
     print(link)
-    title = download_video(link)
-    return title
+    title,obj = download_video(link)
+    return title,obj
+
+def transtime(T):
+    a = T//3600
+    T -= a*3600
+    b = T//60
+    T -= b*60
+    if a>0:
+        return f"{a}h {b}min {T}s"
+    elif b>0:
+        return f"{b}min {T}s"
+    else:
+        return f"{T}s"
